@@ -1,5 +1,6 @@
 Ball ball;
 boolean clicked = false;
+boolean ended = false;
 
 float lastMouseX;
 float lastMouseY;
@@ -15,7 +16,7 @@ void setup() {
   ball = new Ball(50.0, height - 50.0, 30);
   HMax = height - 50;
 
-  frameRate(200);
+  frameRate(90);
 }
 
 void draw() {
@@ -72,6 +73,8 @@ void draw() {
         HMax + (height - 50 - ball.radius/2 - HMax)/2
         );
 
+      ended = true;
+      text("Press anywhere to restart", 10, 30);
       return;
     }
 
@@ -90,6 +93,8 @@ void draw() {
     ball.move();
     ball.path();
   }
+
+  text("FPS: " + round(frameRate), 10, 30);
 }
 
 void mouseClicked() {
@@ -97,5 +102,13 @@ void mouseClicked() {
     clicked = true;
     ball.feedAngle(angle);
     Range = 3.75 * 3.75 * sin(2 * angle) / 0.01;
+  }
+
+  if (ended) {
+    loop();
+    ended = false;
+    clicked = false;
+    ball = new Ball(50.0, height - 50.0, 30);
+    HMax = height - 50;
   }
 }
