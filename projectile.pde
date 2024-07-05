@@ -5,18 +5,18 @@ float lastMouseX;
 float lastMouseY;
 float angle;
 
-int frameCount = 0;
-
 void setup() {
-  size(800, 600);
+  size(1500, 800);
   background(0);
 
   ball = new Ball(50.0, height - 50.0, 30);
-  frameRate(10);
+
+  frameRate(120);
 }
 
 void draw() {
   background(0);
+  fill(255);
 
   stroke(255);
   strokeWeight(2);
@@ -24,7 +24,6 @@ void draw() {
 
   if (!clicked) {
     noStroke();
-    fill(255);
     ball.show();
   }
 
@@ -35,6 +34,8 @@ void draw() {
   noFill();
   arc(50, height - 50 - ball.radius/2, 60, 60, - angle, 0);
   line(50, height - 50 - ball.radius/2, 110, height - 50 - ball.radius/2);
+  textSize(18);
+  text(String.format("%.1f", degrees(angle)), 125, height - 60);
 
   if (mouseY < height - 50 && mouseX > 50 && !clicked) {
     lastMouseX = mouseX;
@@ -44,11 +45,21 @@ void draw() {
   }
 
   if (clicked) {
+    if (ball.vel.y > 0 && ball.pos.y >= height - 50 - ball.radius/2) {
+      noLoop();
+      fill(255);
+      noStroke();
+      ball.show();
+      ball.path();
+      
+      return;
+    }
+    
+    fill(255);
     noStroke();
-    ball.move(frameCount / frameRate);
+    ball.move();
+    ball.path();
   }
-
-  frameCount++;
 }
 
 void mouseClicked() {

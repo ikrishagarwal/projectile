@@ -1,44 +1,47 @@
+import java.util.List;
+import java.util.ArrayList;
+
 class Ball {
-  float x;
-  float y;
-  int radius;
-  int gravity = -10;
-  float u = 5;
-  float ux;
-  float uy;
+  PVector pos;
+  PVector vel;
+  PVector acc;
+  List<PVector> history;
   
-  float initialX;
-  float initialY;
+  int radius;
 
   Ball(float x, float y, int radius) {
     this.radius = radius;
-    this.x = x;
-    this.y = y - radius/2;
+    this.pos = new PVector(x, y - radius/2);
     
-    initialX = x;
-    initialY = y - radius/2;
+    acc = new PVector(0, 0.01);
+    history = new ArrayList<PVector>();
   }
 
   void show() {
-    circle(x, y, radius);
+    circle(pos.x, pos.y, radius);
   }
   
   void feedAngle(float angle) {
-    ux = u * cos(angle);
-    uy = u * sin(angle);
+    vel = PVector.fromAngle(angle);
+    vel.mult(3.75);
+    vel.y *= -1;
   }
   
-  void move(float time) {
-    float x = initialX + ux * time;
+  void move() {
+    vel.add(acc);
+    pos.add(vel);
     
-    //println(ux * time);
-    
-    //float vy = uy + gravity * time;
-    //float y = initialY + (vy*vy - uy*uy) / 2*gravity;
-    
-    this.x = x;
-    //this.y = y;
+    history.add(pos);
     
     show();
+  }
+  
+  void path() {
+    beginShape();
+    stroke(255);
+    for (PVector current: history) {
+      curveVertex(current.x, current.y);
+    }
+    endShape();
   }
 }
