@@ -5,7 +5,7 @@ class Ball {
   PVector pos;
   PVector vel;
   PVector acc;
-  List<PVector> history;
+  List<float[]> history;
   
   int radius;
 
@@ -14,7 +14,7 @@ class Ball {
     this.pos = new PVector(x, y - radius/2);
     
     acc = new PVector(0, 0.01);
-    history = new ArrayList<PVector>();
+    history = new ArrayList<float[]>();
   }
 
   void show() {
@@ -31,7 +31,8 @@ class Ball {
     vel.add(acc);
     pos.add(vel);
     
-    history.add(pos);
+    float[] coord = {pos.x, pos.y};
+    history.add(coord);
     
     show();
   }
@@ -39,8 +40,9 @@ class Ball {
   void path() {
     beginShape();
     stroke(255);
-    for (PVector current: history) {
-      curveVertex(current.x, current.y);
+    noFill();
+    for (float[] current: history) {
+      curveVertex(current[0], current[1]);
     }
     endShape();
   }
